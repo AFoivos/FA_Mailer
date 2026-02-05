@@ -1,0 +1,23 @@
+AF Mailer
+
+Copyright (c) 2026 FOIVOS GEORGIOS AMPATZIS
+
+All Rights Reserved.
+
+This software and its source code are the exclusive intellectual property
+of the author, FOIVOS GEORGIOS AMPATZIS.
+
+Unauthorized copying, modification, distribution, sublicensing,
+reverse engineering, or use of this software, in whole or in part,
+is strictly prohibited without explicit written permission
+from the copyright holder.
+
+This software is provided "as is", without warranty of any kind,
+express or implied, including but not limited to the warranties
+of merchantability, fitness for a particular purpose, and
+noninfringement.
+
+The author shall not be liable for any claim, damages, or other liability,
+whether in an action of contract, tort, or otherwise, arising from,
+out of, or in connection with the software or the use or other dealings
+in the software.

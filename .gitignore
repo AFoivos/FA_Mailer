@@ -1,0 +1,47 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+
+# Packaging / builds
+build/
+dist/
+*.manifest
+
+# Logs / temp
+*.log
+logs/
+*.tmp
+*.temp
+*.bak
+*.old
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Local secrets/config
+secrets.py
+config.local.py
+
+# Data artifacts (optional)
+*.msg
+*.eml
+~$*.xlsx
+
+# Keep app assets
+!assets/
+!assets/*.png
+!assets/*.ico
+
