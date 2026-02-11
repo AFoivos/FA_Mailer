@@ -56,5 +56,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-# .\.venv\Scripts\Activate.ps1
+# .\venv\Scripts\Activate.ps1
 #  python -m app.main
