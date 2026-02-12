@@ -8,6 +8,7 @@ EMAIL_RE = re.compile(
     r"^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9-]+(?:\.[A-Z0-9-]+)+$",
     re.IGNORECASE,
 )
+AFM_FLOAT_RE = re.compile(r"^\d+\.0+$")
 
 
 def is_valid_email(value: str, check_domain: bool = False) -> bool:
@@ -38,7 +39,21 @@ def normalize_mapping(row: dict) -> dict[str, str]:
             continue
 
         value_str = str(value).strip()
-        normalized[key_str] = "" if value_str.lower() == "nan" else value_str
+        if value_str.lower() == "nan":
+            normalized[key_str] = ""
+            continue
+
+        if key_str.strip().lower() == "afm":
+            afm_value = value_str
+            # Excel numeric cells may appear as floats (e.g. "12345678.0").
+            if AFM_FLOAT_RE.fullmatch(afm_value):
+                afm_value = afm_value.split(".", 1)[0]
+            if afm_value.isdigit() and len(afm_value) <= 9:
+                afm_value = afm_value.zfill(9)
+            normalized[key_str] = afm_value
+            continue
+
+        normalized[key_str] = value_str
 
     return normalized
 
