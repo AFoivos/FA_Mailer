@@ -28,7 +28,6 @@ def main():
     try:
         pm = QPixmap(resource_path("assets/front.png"))
         if not pm.isNull():
-            # Make splash a bit smaller than the main window.
             target = QSize(int(986 * 0.90), int(791 * 0.90))
             pm = pm.scaled(target, Qt.KeepAspectRatio, Qt.SmoothTransformation)
             splash = QSplashScreen(pm, Qt.WindowStaysOnTopHint)
