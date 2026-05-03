@@ -12,7 +12,7 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
-from PySide6.QtCore import Qt, QThread
+from PySide6.QtCore import QThread
 from app.ui_main_window import Ui_MainWindow
 from app.services.mailer_worker import BulkMailerWorker
 from app.services.check_worker import EmailCheckWorker
@@ -33,6 +33,8 @@ from PySide6.QtWidgets import (
     QPushButton,
     QLabel,
 )
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -40,30 +42,13 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowIcon(QIcon(resource_path("assets/talis.ico")))
-        self.setWindowFlag(Qt.WindowMaximizeButtonHint, False)
-        self.setFixedSize(self.size())
-                
-        self.ui.grpRun.setTitle("Αποστολή e-mail")
-        self.ui.grpPersonalPdf.setTitle("Προσωπικά PDF (ανά άτομο)")
-        self.ui.grpPlaceholders.setTitle("Διαθέσιμα placeholders (από Excel)")
-        
-        self.ui.lblAttachments.setText("Κοινά συνημμένα για όλους:")
-        self.ui.btnRun.setText("Send")
-        self.ui.btnPreview.setText("Preview")
-        self.ui.btnValidate.setText("Validate")
-        self.ui.btnCheck.setText("Check + Dry Run")
-        self.ui.btnBold.setCheckable(True)
-        self.ui.btnItalic.setCheckable(True)
-        self.ui.btnUnderline.setCheckable(True)
-
-        self.ui.txtSubject.setTextMargins(8, 3, 8, 3)
-        self.ui.lblBody.setViewportMargins(8, 6, 8, 6)
-
         self.setWindowTitle("AF Mailer")
-        
+        self.setMinimumSize(1280, 820)
+
         self.setStyleSheet(APP_STYLE)
+        self._configure_window()
         self._setup_footer_copyright()
-        log_font = QFont("Consolas", 9)
+        log_font = QFont("SF Mono", 10)
         self.ui.txtLog.setFont(log_font)
 
         self.excel_path: str | None = None
@@ -74,8 +59,18 @@ class MainWindow(QMainWindow):
         self.check_thread: QThread | None = None
         self.check_worker: EmailCheckWorker | None = None
         self._wire()
+        self._refresh_summary()
 
         self._log("Ready.")
+
+    def _configure_window(self):
+        self.ui.grpRun.setTitle("Campaign activity")
+        self.ui.grpPersonalPdf.setTitle("Personalized attachments")
+        self.ui.grpPlaceholders.setTitle("Available placeholders")
+
+        self.ui.txtSubject.setTextMargins(10, 0, 10, 0)
+        self.ui.lblBody.setViewportMargins(8, 8, 8, 8)
+        self.ui.workspaceSplitter.setHandleWidth(14)
 
     def _setup_footer_copyright(self):
         if not hasattr(self.ui, "statusbar"):
@@ -88,6 +83,18 @@ class MainWindow(QMainWindow):
         footer.setStyleSheet("color: #35506f; font-size: 10px;")
         self.ui.statusbar.addPermanentWidget(footer, 1)
         self.ui.statusbar.setSizeGripEnabled(False)
+
+    def _refresh_summary(self):
+        excel_value = self._filename_only(self.excel_path) if self.excel_path else "No Excel loaded"
+        email_column = (self.ui.comboEmailCol.currentText() or "").strip() or "Not selected"
+        attachments = len(self.common_attachments_paths)
+
+        if hasattr(self.ui, "lblSummaryExcelValue"):
+            self.ui.lblSummaryExcelValue.setText(excel_value)
+        if hasattr(self.ui, "lblSummaryRecipientsValue"):
+            self.ui.lblSummaryRecipientsValue.setText(email_column)
+        if hasattr(self.ui, "lblSummaryAttachmentsValue"):
+            self.ui.lblSummaryAttachmentsValue.setText(f"{attachments} file{'s' if attachments != 1 else ''}")
 
     def _collect_pdf_patterns(self) -> list[str]:
         patterns: list[str] = []
@@ -107,6 +114,7 @@ class MainWindow(QMainWindow):
 
     def _wire(self):
         self.ui.btnBrowseExcel.clicked.connect(self.pick_excel)
+        self.ui.comboEmailCol.currentTextChanged.connect(self._refresh_summary)
 
         self.ui.btnAddAttachments.clicked.connect(self.add_common_attachments)
         self.ui.btnClearAttachments.clicked.connect(self.clear_common_attachments)
@@ -206,6 +214,7 @@ class MainWindow(QMainWindow):
         self.excel_path = path
         self.ui.txtExcel.setText(self._filename_only(path))
         self._log(f"Excel selected: {self._filename_only(path)}")
+        self._refresh_summary()
 
         self._load_excel_columns_and_placeholders(path)
 
@@ -235,6 +244,7 @@ class MainWindow(QMainWindow):
                 if guess:
                     self.ui.comboEmailCol.setCurrentText(guess)
                     self._log(f"Email column auto-selected: {guess}")
+                self._refresh_summary()
 
         except Exception as e:
             QMessageBox.critical(self, "Excel error", str(e))
@@ -267,11 +277,13 @@ class MainWindow(QMainWindow):
                 added += 1
 
         self._log(f"Common attachments: +{added} (total {len(self.common_attachments_paths)})")
+        self._refresh_summary()
 
     def clear_common_attachments(self):
         self.common_attachments_paths.clear()
         self.ui.listAttachments.clear()
         self._log("Common attachments cleared.")
+        self._refresh_summary()
 
     def pick_personal_pdf_folder(self):
         folder = QFileDialog.getExistingDirectory(self, "Select personal PDF folder", "")
@@ -715,5 +727,3 @@ class MainWindow(QMainWindow):
 
         self._log(f"[THREAD ERROR] {err}")
         QMessageBox.critical(self, "Run failed", err)
-
-

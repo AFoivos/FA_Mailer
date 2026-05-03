@@ -1,336 +1,461 @@
-# -*- coding: utf-8 -*-
+from __future__ import annotations
 
-"""
-AF Mailer
-Copyright (c) 2026 Φοίβος Γεώργιος Αμπατζής
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (
+    QAbstractItemView,
+    QCheckBox,
+    QComboBox,
+    QFrame,
+    QGridLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMainWindow,
+    QMenuBar,
+    QPlainTextEdit,
+    QProgressBar,
+    QPushButton,
+    QRadioButton,
+    QSizePolicy,
+    QSplitter,
+    QStatusBar,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
-All rights reserved.
-Unauthorized copying, modification or distribution is prohibited.
-"""
-
-################################################################################
-## Form generated from reading UI file 'main_window.ui'
-##
-## Created by: Qt User Interface Compiler version 6.10.1
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QGroupBox,
-    QHBoxLayout, QLabel, QLineEdit, QListWidget,
-    QListWidgetItem, QMainWindow, QMenuBar, QProgressBar,
-    QPushButton, QRadioButton, QSizePolicy, QStatusBar, QTextEdit,
-    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow: QMainWindow):
         if not MainWindow.objectName():
-            MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(986, 791)
-        MainWindow.setMouseTracking(False)
+            MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(1440, 920)
+
         self.centralwidget = QWidget(MainWindow)
-        self.centralwidget.setObjectName(u"centralwidget")
-        self.lblBody = QTextEdit(self.centralwidget)
-        self.lblBody.setObjectName(u"lblBody")
-        self.lblBody.setGeometry(QRect(32, 60, 721, 311))
-        self.txtSubject = QLineEdit(self.centralwidget)
-        self.txtSubject.setObjectName(u"txtSubject")
-        self.txtSubject.setGeometry(QRect(30, 20, 721, 20))
-        self.txtSubject.setClearButtonEnabled(True)
-        self.horizontalLayoutWidget = QWidget(self.centralwidget)
-        self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
-        self.horizontalLayoutWidget.setGeometry(QRect(760, 270, 211, 25))
-        self.horizontalLayout = QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.lblExcel = QLabel(self.horizontalLayoutWidget)
-        self.lblExcel.setObjectName(u"lblExcel")
-
-        self.horizontalLayout.addWidget(self.lblExcel)
-
-        self.txtExcel = QLineEdit(self.horizontalLayoutWidget)
-        self.txtExcel.setObjectName(u"txtExcel")
-
-        self.horizontalLayout.addWidget(self.txtExcel)
-
-        self.btnBrowseExcel = QPushButton(self.horizontalLayoutWidget)
-        self.btnBrowseExcel.setObjectName(u"btnBrowseExcel")
-
-        self.horizontalLayout.addWidget(self.btnBrowseExcel)
-
-        self.grpPlaceholders = QGroupBox(self.centralwidget)
-        self.grpPlaceholders.setObjectName(u"grpPlaceholders")
-        self.grpPlaceholders.setGeometry(QRect(760, 20, 211, 251))
-        self.layoutWidget = QWidget(self.grpPlaceholders)
-        self.layoutWidget.setObjectName(u"layoutWidget")
-        self.layoutWidget.setGeometry(QRect(10, 20, 191, 221))
-        self.verticalLayout_2 = QVBoxLayout(self.layoutWidget)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.lblPhHint = QLabel(self.layoutWidget)
-        self.lblPhHint.setObjectName(u"lblPhHint")
-
-        self.verticalLayout_2.addWidget(self.lblPhHint)
-
-        self.listPlaceholders = QListWidget(self.layoutWidget)
-        self.listPlaceholders.setObjectName(u"listPlaceholders")
-        self.listPlaceholders.setSelectionMode(QAbstractItemView.ExtendedSelection)
-
-        self.verticalLayout_2.addWidget(self.listPlaceholders)
-
-        self.grpPersonalPdf = QGroupBox(self.centralwidget)
-        self.grpPersonalPdf.setObjectName(u"grpPersonalPdf")
-        self.grpPersonalPdf.setGeometry(QRect(30, 380, 261, 271))
-        self.layoutWidget1 = QWidget(self.grpPersonalPdf)
-        self.layoutWidget1.setObjectName(u"layoutWidget1")
-        self.layoutWidget1.setGeometry(QRect(0, 20, 251, 251))
-        self.verticalLayout_3 = QVBoxLayout(self.layoutWidget1)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.lblPdfFolder = QLabel(self.layoutWidget1)
-        self.lblPdfFolder.setObjectName(u"lblPdfFolder")
-
-        self.horizontalLayout_4.addWidget(self.lblPdfFolder)
-
-        self.txtPdfFolderName = QLineEdit(self.layoutWidget1)
-        self.txtPdfFolderName.setObjectName(u"txtPdfFolderName")
-        self.txtPdfFolderName.setReadOnly(True)
-
-        self.horizontalLayout_4.addWidget(self.txtPdfFolderName)
-
-        self.btnBrowsePdfFolder = QPushButton(self.layoutWidget1)
-        self.btnBrowsePdfFolder.setObjectName(u"btnBrowsePdfFolder")
-
-        self.horizontalLayout_4.addWidget(self.btnBrowsePdfFolder)
-
-
-        self.verticalLayout_3.addLayout(self.horizontalLayout_4)
-
-        self.lblPdfPatterns = QLabel(self.layoutWidget1)
-        self.lblPdfPatterns.setObjectName(u"lblPdfPatterns")
-
-        self.verticalLayout_3.addWidget(self.lblPdfPatterns)
-
-        self.listPdfPatterns = QListWidget(self.layoutWidget1)
-        self.listPdfPatterns.setObjectName(u"listPdfPatterns")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.listPdfPatterns.sizePolicy().hasHeightForWidth())
-        self.listPdfPatterns.setSizePolicy(sizePolicy)
-
-        self.verticalLayout_3.addWidget(self.listPdfPatterns)
-
-        self.horizontalLayout_5 = QHBoxLayout()
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.btnAddPdfPattern = QPushButton(self.layoutWidget1)
-        self.btnAddPdfPattern.setObjectName(u"btnAddPdfPattern")
-
-        self.horizontalLayout_5.addWidget(self.btnAddPdfPattern)
-
-        self.btnRemovePdfPattern = QPushButton(self.layoutWidget1)
-        self.btnRemovePdfPattern.setObjectName(u"btnRemovePdfPattern")
-
-        self.horizontalLayout_5.addWidget(self.btnRemovePdfPattern)
-
-
-        self.verticalLayout_3.addLayout(self.horizontalLayout_5)
-
-        self.grpRun = QGroupBox(self.centralwidget)
-        self.grpRun.setObjectName(u"grpRun")
-        self.grpRun.setGeometry(QRect(300, 380, 331, 271))
-        self.layoutWidget2 = QWidget(self.grpRun)
-        self.layoutWidget2.setObjectName(u"layoutWidget2")
-        self.layoutWidget2.setGeometry(QRect(10, 20, 322, 252))
-        self.verticalLayout_4 = QVBoxLayout(self.layoutWidget2)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_7 = QHBoxLayout()
-        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.radioDraft = QRadioButton(self.layoutWidget2)
-        self.radioDraft.setObjectName(u"radioDraft")
-
-        self.horizontalLayout_7.addWidget(self.radioDraft)
-
-        self.radioSend = QRadioButton(self.layoutWidget2)
-        self.radioSend.setObjectName(u"radioSend")
-        self.radioSend.setChecked(True)
-
-        self.horizontalLayout_7.addWidget(self.radioSend)
-
-
-        self.verticalLayout_4.addLayout(self.horizontalLayout_7)
-
-        self.horizontalLayout_6 = QHBoxLayout()
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.btnValidate = QPushButton(self.layoutWidget2)
-        self.btnValidate.setObjectName(u"btnValidate")
-
-        self.horizontalLayout_6.addWidget(self.btnValidate)
-
-        self.btnPreview = QPushButton(self.layoutWidget2)
-        self.btnPreview.setObjectName(u"btnPreview")
-
-        self.horizontalLayout_6.addWidget(self.btnPreview)
-
-        self.btnCheck = QPushButton(self.layoutWidget2)
-        self.btnCheck.setObjectName(u"btnCheck")
-
-        self.horizontalLayout_6.addWidget(self.btnCheck)
-
-        self.btnRun = QPushButton(self.layoutWidget2)
-        self.btnRun.setObjectName(u"btnRun")
-
-        self.horizontalLayout_6.addWidget(self.btnRun)
-
-
-        self.verticalLayout_4.addLayout(self.horizontalLayout_6)
-
-        self.txtLog = QTextEdit(self.layoutWidget2)
-        self.txtLog.setObjectName(u"txtLog")
-        self.txtLog.setReadOnly(True)
-
-        self.verticalLayout_4.addWidget(self.txtLog)
-
-        self.progressBar = QProgressBar(self.layoutWidget2)
-        self.progressBar.setObjectName(u"progressBar")
-        self.progressBar.setValue(0)
-        self.progressBar.setTextVisible(True)
-
-        self.verticalLayout_4.addWidget(self.progressBar)
-
-        self.layoutWidget3 = QWidget(self.centralwidget)
-        self.layoutWidget3.setObjectName(u"layoutWidget3")
-        self.layoutWidget3.setGeometry(QRect(640, 380, 239, 241))
-        self.verticalLayout = QVBoxLayout(self.layoutWidget3)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.lblAttachments = QLabel(self.layoutWidget3)
-        self.lblAttachments.setObjectName(u"lblAttachments")
-
-        self.verticalLayout.addWidget(self.lblAttachments)
-
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.btnAddAttachments = QPushButton(self.layoutWidget3)
-        self.btnAddAttachments.setObjectName(u"btnAddAttachments")
-
-        self.horizontalLayout_2.addWidget(self.btnAddAttachments)
-
-        self.btnClearAttachments = QPushButton(self.layoutWidget3)
-        self.btnClearAttachments.setObjectName(u"btnClearAttachments")
-
-        self.horizontalLayout_2.addWidget(self.btnClearAttachments)
-
-
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
-
-        self.listAttachments = QListWidget(self.layoutWidget3)
-        self.listAttachments.setObjectName(u"listAttachments")
-        sizePolicy.setHeightForWidth(self.listAttachments.sizePolicy().hasHeightForWidth())
-        self.listAttachments.setSizePolicy(sizePolicy)
-        self.listAttachments.setSelectionMode(QAbstractItemView.ExtendedSelection)
-
-        self.verticalLayout.addWidget(self.listAttachments)
-
-        self.layoutWidget4 = QWidget(self.centralwidget)
-        self.layoutWidget4.setObjectName(u"layoutWidget4")
-        self.layoutWidget4.setGeometry(QRect(760, 300, 211, 22))
-        self.horizontalLayout_3 = QHBoxLayout(self.layoutWidget4)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.lblEmailCol = QLabel(self.layoutWidget4)
-        self.lblEmailCol.setObjectName(u"lblEmailCol")
-
-        self.horizontalLayout_3.addWidget(self.lblEmailCol)
-
-        self.comboEmailCol = QComboBox(self.layoutWidget4)
-        self.comboEmailCol.setObjectName(u"comboEmailCol")
-
-        self.horizontalLayout_3.addWidget(self.comboEmailCol)
-
-        self.widget = QWidget(self.centralwidget)
-        self.widget.setObjectName(u"widget")
-        self.widget.setGeometry(QRect(10, 60, 21, 83))
-        self.verticalLayout_5 = QVBoxLayout(self.widget)
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
-        self.btnBold = QPushButton(self.widget)
-        self.btnBold.setObjectName(u"btnBold")
-        self.btnBold.setCheckable(True)
-
-        self.verticalLayout_5.addWidget(self.btnBold)
-
-        self.btnItalic = QPushButton(self.widget)
-        self.btnItalic.setObjectName(u"btnItalic")
-        self.btnItalic.setCheckable(True)
-
-        self.verticalLayout_5.addWidget(self.btnItalic)
-
-        self.btnUnderline = QPushButton(self.widget)
-        self.btnUnderline.setObjectName(u"btnUnderline")
-        self.btnUnderline.setCheckable(True)
-
-        self.verticalLayout_5.addWidget(self.btnUnderline)
+        self.centralwidget.setObjectName("centralwidget")
+        self.rootLayout = QVBoxLayout(self.centralwidget)
+        self.rootLayout.setContentsMargins(24, 20, 24, 20)
+        self.rootLayout.setSpacing(18)
+
+        self._build_header()
+        self._build_workspace()
 
         MainWindow.setCentralWidget(self.centralwidget)
+
         self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 986, 21))
+        self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
+
         self.statusbar = QStatusBar(MainWindow)
-        self.statusbar.setObjectName(u"statusbar")
+        self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
 
-        QMetaObject.connectSlotsByName(MainWindow)
-    # setupUi
+    def _build_header(self):
+        self.headerCard = QFrame(self.centralwidget)
+        self.headerCard.setObjectName("HeaderCard")
+        header_layout = QHBoxLayout(self.headerCard)
+        header_layout.setContentsMargins(28, 24, 28, 24)
+        header_layout.setSpacing(20)
 
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.lblBody.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
-        self.lblBody.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u039a\u03b5\u03af\u03bc\u03b5\u03bd\u03bf", None))
-        self.txtSubject.setText("")
-        self.txtSubject.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u0398\u03ad\u03bc\u03b1", None))
-        self.lblExcel.setText(QCoreApplication.translate("MainWindow", u"Excel :", None))
-        self.btnBrowseExcel.setText(QCoreApplication.translate("MainWindow", u"Browse Excel\u2026", None))
-        self.grpPlaceholders.setTitle(QCoreApplication.translate("MainWindow", u"\u0394\u03b9\u03b1\u03b8\u03ad\u03c3\u03b9\u03bc\u03b1 placeholders (\u03b1\u03c0\u03cc Excel)", None))
-        self.lblPhHint.setText(QCoreApplication.translate("MainWindow", u"\u0394\u03b9\u03c0\u03bb\u03cc \u03ba\u03bb\u03b9\u03ba \u03b3\u03b9\u03b1 \u03b1\u03bd\u03c4\u03b9\u03b3\u03c1\u03b1\u03c6\u03ae \u03c3\u03c4\u03bf clipboard", None))
-        self.grpPersonalPdf.setTitle(QCoreApplication.translate("MainWindow", u"\u03a0\u03c1\u03bf\u03c3\u03c9\u03c0\u03b9\u03ba\u03ac PDF (\u03b1\u03bd\u03ac \u03ac\u03c4\u03bf\u03bc\u03bf)", None))
-        self.lblPdfFolder.setText(QCoreApplication.translate("MainWindow", u"\u03a6\u03ac\u03ba\u03b5\u03bb\u03bf\u03c2 PDF:", None))
-        self.txtPdfFolderName.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u0394\u03b5\u03bd \u03ad\u03c7\u03b5\u03b9 \u03b5\u03c0\u03b9\u03bb\u03b5\u03b3\u03b5\u03af \u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03c2", None))
-        self.btnBrowsePdfFolder.setText(QCoreApplication.translate("MainWindow", u"Browse\u2026", None))
-        self.lblPdfPatterns.setText(QCoreApplication.translate("MainWindow", u"Patterns \u03b1\u03c1\u03c7\u03b5\u03af\u03c9\u03bd:", None))
-        self.btnAddPdfPattern.setText(QCoreApplication.translate("MainWindow", u"\u03a0\u03c1\u03bf\u03c3\u03b8\u03ae\u03ba\u03b7", None))
-        self.btnRemovePdfPattern.setText(QCoreApplication.translate("MainWindow", u"\u0391\u03c6\u03b1\u03af\u03c1\u03b5\u03c3\u03b7", None))
-        self.grpRun.setTitle(QCoreApplication.translate("MainWindow", u"\u0395\u03ba\u03c4\u03ad\u03bb\u03b5\u03c3\u03b7", None))
-        self.radioDraft.setText(QCoreApplication.translate("MainWindow", u"Save (Draft)", None))
-        self.radioSend.setText(QCoreApplication.translate("MainWindow", u"Send", None))
-        self.btnValidate.setText(QCoreApplication.translate("MainWindow", u"Validate", None))
-        self.btnPreview.setText(QCoreApplication.translate("MainWindow", u"Preview ", None))
-        self.btnCheck.setText(QCoreApplication.translate("MainWindow", u"Check", None))
-        self.btnRun.setText(QCoreApplication.translate("MainWindow", u"Run", None))
-        self.txtLog.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u0395\u03b4\u03ce \u03b8\u03b1 \u03b5\u03bc\u03c6\u03b1\u03bd\u03af\u03b6\u03bf\u03bd\u03c4\u03b1\u03b9 \u03c4\u03b1 \u03bc\u03b7\u03bd\u03cd\u03bc\u03b1\u03c4\u03b1...", None))
-        self.lblAttachments.setText(QCoreApplication.translate("MainWindow", u"\u03a3\u03c5\u03bd\u03b7\u03bc\u03bc\u03ad\u03bd\u03b1:", None))
-        self.btnAddAttachments.setText(QCoreApplication.translate("MainWindow", u"\u03a0\u03c1\u03bf\u03c3\u03b8\u03ae\u03ba\u03b7", None))
-        self.btnClearAttachments.setText(QCoreApplication.translate("MainWindow", u"\u039a\u03b1\u03b8\u03b1\u03c1\u03b9\u03c3\u03bc\u03cc\u03c2", None))
-        self.lblEmailCol.setText(QCoreApplication.translate("MainWindow", u"\u03a3\u03c4\u03ae\u03bb\u03b7 Email:", None))
-        self.btnBold.setText(QCoreApplication.translate("MainWindow", u"B", None))
-        self.btnItalic.setText(QCoreApplication.translate("MainWindow", u"I", None))
-        self.btnUnderline.setText(QCoreApplication.translate("MainWindow", u"U", None))
-    # retranslateUi
+        title_layout = QVBoxLayout()
+        title_layout.setSpacing(6)
 
+        self.lblEyebrow = QLabel(self.headerCard)
+        self.lblEyebrow.setObjectName("lblEyebrow")
+        title_layout.addWidget(self.lblEyebrow)
+
+        self.lblHeroTitle = QLabel(self.headerCard)
+        self.lblHeroTitle.setObjectName("lblHeroTitle")
+        self.lblHeroTitle.setWordWrap(True)
+        title_layout.addWidget(self.lblHeroTitle)
+
+        self.lblHeroSubtitle = QLabel(self.headerCard)
+        self.lblHeroSubtitle.setObjectName("lblHeroSubtitle")
+        self.lblHeroSubtitle.setWordWrap(True)
+        title_layout.addWidget(self.lblHeroSubtitle)
+        title_layout.addStretch()
+
+        header_layout.addLayout(title_layout, 1)
+
+        summary_layout = QVBoxLayout()
+        summary_layout.setSpacing(10)
+
+        self.summaryCard = QFrame(self.headerCard)
+        self.summaryCard.setObjectName("SummaryCard")
+        summary_grid = QGridLayout(self.summaryCard)
+        summary_grid.setContentsMargins(18, 16, 18, 16)
+        summary_grid.setHorizontalSpacing(18)
+        summary_grid.setVerticalSpacing(10)
+
+        self.lblSummaryExcelLabel = QLabel(self.summaryCard)
+        self.lblSummaryExcelLabel.setObjectName("MetricLabel")
+        summary_grid.addWidget(self.lblSummaryExcelLabel, 0, 0)
+
+        self.lblSummaryExcelValue = QLabel(self.summaryCard)
+        self.lblSummaryExcelValue.setObjectName("MetricValue")
+        summary_grid.addWidget(self.lblSummaryExcelValue, 1, 0)
+
+        self.lblSummaryRecipientsLabel = QLabel(self.summaryCard)
+        self.lblSummaryRecipientsLabel.setObjectName("MetricLabel")
+        summary_grid.addWidget(self.lblSummaryRecipientsLabel, 0, 1)
+
+        self.lblSummaryRecipientsValue = QLabel(self.summaryCard)
+        self.lblSummaryRecipientsValue.setObjectName("MetricValue")
+        summary_grid.addWidget(self.lblSummaryRecipientsValue, 1, 1)
+
+        self.lblSummaryAttachmentsLabel = QLabel(self.summaryCard)
+        self.lblSummaryAttachmentsLabel.setObjectName("MetricLabel")
+        summary_grid.addWidget(self.lblSummaryAttachmentsLabel, 0, 2)
+
+        self.lblSummaryAttachmentsValue = QLabel(self.summaryCard)
+        self.lblSummaryAttachmentsValue.setObjectName("MetricValue")
+        summary_grid.addWidget(self.lblSummaryAttachmentsValue, 1, 2)
+
+        summary_layout.addWidget(self.summaryCard)
+        header_layout.addLayout(summary_layout)
+
+        self.rootLayout.addWidget(self.headerCard)
+
+    def _build_workspace(self):
+        self.workspaceSplitter = QSplitter(Qt.Horizontal, self.centralwidget)
+        self.workspaceSplitter.setObjectName("workspaceSplitter")
+        self.workspaceSplitter.setChildrenCollapsible(False)
+
+        self._build_left_sidebar()
+        self._build_compose_center()
+        self._build_right_sidebar()
+
+        self.workspaceSplitter.addWidget(self.leftSidebar)
+        self.workspaceSplitter.addWidget(self.composePanel)
+        self.workspaceSplitter.addWidget(self.rightSidebar)
+        self.workspaceSplitter.setStretchFactor(0, 0)
+        self.workspaceSplitter.setStretchFactor(1, 1)
+        self.workspaceSplitter.setStretchFactor(2, 0)
+        self.workspaceSplitter.setSizes([300, 760, 320])
+
+        self.rootLayout.addWidget(self.workspaceSplitter, 1)
+
+    def _build_left_sidebar(self):
+        self.leftSidebar = QFrame(self.centralwidget)
+        self.leftSidebar.setObjectName("SidebarCard")
+        left_layout = QVBoxLayout(self.leftSidebar)
+        left_layout.setContentsMargins(18, 18, 18, 18)
+        left_layout.setSpacing(16)
+
+        self.lblSetupTitle = QLabel(self.leftSidebar)
+        self.lblSetupTitle.setObjectName("PanelTitle")
+        left_layout.addWidget(self.lblSetupTitle)
+
+        self.dataCard = QFrame(self.leftSidebar)
+        self.dataCard.setObjectName("PanelSection")
+        data_layout = QVBoxLayout(self.dataCard)
+        data_layout.setContentsMargins(16, 16, 16, 16)
+        data_layout.setSpacing(12)
+
+        self.lblDataTitle = QLabel(self.dataCard)
+        self.lblDataTitle.setObjectName("SectionTitle")
+        data_layout.addWidget(self.lblDataTitle)
+
+        self.lblExcel = QLabel(self.dataCard)
+        self.lblExcel.setObjectName("FieldLabel")
+        data_layout.addWidget(self.lblExcel)
+
+        excel_row = QHBoxLayout()
+        excel_row.setSpacing(8)
+        self.txtExcel = QLineEdit(self.dataCard)
+        self.txtExcel.setObjectName("txtExcel")
+        self.txtExcel.setReadOnly(True)
+        excel_row.addWidget(self.txtExcel, 1)
+
+        self.btnBrowseExcel = QPushButton(self.dataCard)
+        self.btnBrowseExcel.setObjectName("btnBrowseExcel")
+        excel_row.addWidget(self.btnBrowseExcel)
+        data_layout.addLayout(excel_row)
+
+        self.lblEmailCol = QLabel(self.dataCard)
+        self.lblEmailCol.setObjectName("FieldLabel")
+        data_layout.addWidget(self.lblEmailCol)
+
+        self.comboEmailCol = QComboBox(self.dataCard)
+        self.comboEmailCol.setObjectName("comboEmailCol")
+        data_layout.addWidget(self.comboEmailCol)
+        left_layout.addWidget(self.dataCard)
+
+        self.grpPlaceholders = QGroupBox(self.leftSidebar)
+        self.grpPlaceholders.setObjectName("grpPlaceholders")
+        placeholders_layout = QVBoxLayout(self.grpPlaceholders)
+        placeholders_layout.setContentsMargins(16, 18, 16, 16)
+        placeholders_layout.setSpacing(10)
+
+        self.lblPhHint = QLabel(self.grpPlaceholders)
+        self.lblPhHint.setObjectName("HelperLabel")
+        self.lblPhHint.setWordWrap(True)
+        placeholders_layout.addWidget(self.lblPhHint)
+
+        self.listPlaceholders = QListWidget(self.grpPlaceholders)
+        self.listPlaceholders.setObjectName("listPlaceholders")
+        self.listPlaceholders.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        placeholders_layout.addWidget(self.listPlaceholders, 1)
+        left_layout.addWidget(self.grpPlaceholders, 1)
+
+    def _build_compose_center(self):
+        self.composePanel = QFrame(self.centralwidget)
+        self.composePanel.setObjectName("ComposePanel")
+        compose_layout = QVBoxLayout(self.composePanel)
+        compose_layout.setContentsMargins(0, 0, 0, 0)
+        compose_layout.setSpacing(16)
+
+        self.composeCard = QFrame(self.composePanel)
+        self.composeCard.setObjectName("ComposeCard")
+        compose_card_layout = QVBoxLayout(self.composeCard)
+        compose_card_layout.setContentsMargins(24, 22, 24, 22)
+        compose_card_layout.setSpacing(16)
+
+        compose_header = QHBoxLayout()
+        compose_header.setSpacing(12)
+
+        compose_title_layout = QVBoxLayout()
+        compose_title_layout.setSpacing(4)
+
+        self.lblComposeTitle = QLabel(self.composeCard)
+        self.lblComposeTitle.setObjectName("PanelTitle")
+        compose_title_layout.addWidget(self.lblComposeTitle)
+
+        self.lblComposeSubtitle = QLabel(self.composeCard)
+        self.lblComposeSubtitle.setObjectName("HelperLabel")
+        self.lblComposeSubtitle.setWordWrap(True)
+        compose_title_layout.addWidget(self.lblComposeSubtitle)
+        compose_header.addLayout(compose_title_layout, 1)
+
+        self.modeCard = QFrame(self.composeCard)
+        self.modeCard.setObjectName("ModeCard")
+        mode_layout = QHBoxLayout(self.modeCard)
+        mode_layout.setContentsMargins(14, 12, 14, 12)
+        mode_layout.setSpacing(14)
+
+        self.radioDraft = QRadioButton(self.modeCard)
+        self.radioDraft.setObjectName("radioDraft")
+        mode_layout.addWidget(self.radioDraft)
+
+        self.radioSend = QRadioButton(self.modeCard)
+        self.radioSend.setObjectName("radioSend")
+        self.radioSend.setChecked(True)
+        mode_layout.addWidget(self.radioSend)
+        compose_header.addWidget(self.modeCard)
+
+        compose_card_layout.addLayout(compose_header)
+
+        self.txtSubject = QLineEdit(self.composeCard)
+        self.txtSubject.setObjectName("txtSubject")
+        compose_card_layout.addWidget(self.txtSubject)
+
+        self.editorCard = QFrame(self.composeCard)
+        self.editorCard.setObjectName("EditorCard")
+        editor_layout = QVBoxLayout(self.editorCard)
+        editor_layout.setContentsMargins(12, 12, 12, 12)
+        editor_layout.setSpacing(10)
+
+        toolbar = QHBoxLayout()
+        toolbar.setSpacing(8)
+
+        self.btnBold = QPushButton(self.editorCard)
+        self.btnBold.setObjectName("btnBold")
+        self.btnBold.setCheckable(True)
+        toolbar.addWidget(self.btnBold)
+
+        self.btnItalic = QPushButton(self.editorCard)
+        self.btnItalic.setObjectName("btnItalic")
+        self.btnItalic.setCheckable(True)
+        toolbar.addWidget(self.btnItalic)
+
+        self.btnUnderline = QPushButton(self.editorCard)
+        self.btnUnderline.setObjectName("btnUnderline")
+        self.btnUnderline.setCheckable(True)
+        toolbar.addWidget(self.btnUnderline)
+
+        toolbar.addStretch()
+        editor_layout.addLayout(toolbar)
+
+        self.lblBody = QTextEdit(self.editorCard)
+        self.lblBody.setObjectName("lblBody")
+        editor_layout.addWidget(self.lblBody, 1)
+        compose_card_layout.addWidget(self.editorCard, 1)
+
+        actions_row = QHBoxLayout()
+        actions_row.setSpacing(10)
+
+        self.btnValidate = QPushButton(self.composeCard)
+        self.btnValidate.setObjectName("btnValidate")
+        actions_row.addWidget(self.btnValidate)
+
+        self.btnPreview = QPushButton(self.composeCard)
+        self.btnPreview.setObjectName("btnPreview")
+        actions_row.addWidget(self.btnPreview)
+
+        self.btnCheck = QPushButton(self.composeCard)
+        self.btnCheck.setObjectName("btnCheck")
+        actions_row.addWidget(self.btnCheck)
+
+        actions_row.addStretch()
+
+        self.btnRun = QPushButton(self.composeCard)
+        self.btnRun.setObjectName("btnRun")
+        self.btnRun.setProperty("variant", "primary")
+        actions_row.addWidget(self.btnRun)
+
+        compose_card_layout.addLayout(actions_row)
+        compose_layout.addWidget(self.composeCard, 1)
+
+    def _build_right_sidebar(self):
+        self.rightSidebar = QFrame(self.centralwidget)
+        self.rightSidebar.setObjectName("SidebarCard")
+        right_layout = QVBoxLayout(self.rightSidebar)
+        right_layout.setContentsMargins(18, 18, 18, 18)
+        right_layout.setSpacing(16)
+
+        self.grpPersonalPdf = QGroupBox(self.rightSidebar)
+        self.grpPersonalPdf.setObjectName("grpPersonalPdf")
+        pdf_layout = QVBoxLayout(self.grpPersonalPdf)
+        pdf_layout.setContentsMargins(16, 18, 16, 16)
+        pdf_layout.setSpacing(10)
+
+        self.lblPdfFolder = QLabel(self.grpPersonalPdf)
+        self.lblPdfFolder.setObjectName("FieldLabel")
+        pdf_layout.addWidget(self.lblPdfFolder)
+
+        pdf_folder_row = QHBoxLayout()
+        pdf_folder_row.setSpacing(8)
+
+        self.txtPdfFolderName = QLineEdit(self.grpPersonalPdf)
+        self.txtPdfFolderName.setObjectName("txtPdfFolderName")
+        self.txtPdfFolderName.setReadOnly(True)
+        pdf_folder_row.addWidget(self.txtPdfFolderName, 1)
+
+        self.btnBrowsePdfFolder = QPushButton(self.grpPersonalPdf)
+        self.btnBrowsePdfFolder.setObjectName("btnBrowsePdfFolder")
+        pdf_folder_row.addWidget(self.btnBrowsePdfFolder)
+        pdf_layout.addLayout(pdf_folder_row)
+
+        self.lblPdfPatterns = QLabel(self.grpPersonalPdf)
+        self.lblPdfPatterns.setObjectName("FieldLabel")
+        pdf_layout.addWidget(self.lblPdfPatterns)
+
+        self.listPdfPatterns = QListWidget(self.grpPersonalPdf)
+        self.listPdfPatterns.setObjectName("listPdfPatterns")
+        pdf_layout.addWidget(self.listPdfPatterns, 1)
+
+        pdf_buttons = QHBoxLayout()
+        pdf_buttons.setSpacing(8)
+
+        self.btnAddPdfPattern = QPushButton(self.grpPersonalPdf)
+        self.btnAddPdfPattern.setObjectName("btnAddPdfPattern")
+        pdf_buttons.addWidget(self.btnAddPdfPattern)
+
+        self.btnRemovePdfPattern = QPushButton(self.grpPersonalPdf)
+        self.btnRemovePdfPattern.setObjectName("btnRemovePdfPattern")
+        pdf_buttons.addWidget(self.btnRemovePdfPattern)
+        pdf_layout.addLayout(pdf_buttons)
+
+        self.chkRequirePersonalPdf = QCheckBox(self.grpPersonalPdf)
+        self.chkRequirePersonalPdf.setObjectName("chkRequirePersonalPdf")
+        pdf_layout.addWidget(self.chkRequirePersonalPdf)
+        right_layout.addWidget(self.grpPersonalPdf, 1)
+
+        self.attachmentsCard = QGroupBox(self.rightSidebar)
+        self.attachmentsCard.setObjectName("attachmentsCard")
+        attachments_layout = QVBoxLayout(self.attachmentsCard)
+        attachments_layout.setContentsMargins(16, 18, 16, 16)
+        attachments_layout.setSpacing(10)
+
+        self.lblAttachments = QLabel(self.attachmentsCard)
+        self.lblAttachments.setObjectName("FieldLabel")
+        attachments_layout.addWidget(self.lblAttachments)
+
+        attachments_buttons = QHBoxLayout()
+        attachments_buttons.setSpacing(8)
+
+        self.btnAddAttachments = QPushButton(self.attachmentsCard)
+        self.btnAddAttachments.setObjectName("btnAddAttachments")
+        attachments_buttons.addWidget(self.btnAddAttachments)
+
+        self.btnClearAttachments = QPushButton(self.attachmentsCard)
+        self.btnClearAttachments.setObjectName("btnClearAttachments")
+        attachments_buttons.addWidget(self.btnClearAttachments)
+        attachments_layout.addLayout(attachments_buttons)
+
+        self.listAttachments = QListWidget(self.attachmentsCard)
+        self.listAttachments.setObjectName("listAttachments")
+        self.listAttachments.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        attachments_layout.addWidget(self.listAttachments, 1)
+        right_layout.addWidget(self.attachmentsCard, 1)
+
+        self.grpRun = QGroupBox(self.rightSidebar)
+        self.grpRun.setObjectName("grpRun")
+        run_layout = QVBoxLayout(self.grpRun)
+        run_layout.setContentsMargins(16, 18, 16, 16)
+        run_layout.setSpacing(12)
+
+        self.txtLog = QPlainTextEdit(self.grpRun)
+        self.txtLog.setObjectName("txtLog")
+        self.txtLog.setReadOnly(True)
+        self.txtLog.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        run_layout.addWidget(self.txtLog, 1)
+
+        self.progressBar = QProgressBar(self.grpRun)
+        self.progressBar.setObjectName("progressBar")
+        self.progressBar.setValue(0)
+        run_layout.addWidget(self.progressBar)
+        right_layout.addWidget(self.grpRun, 1)
+
+    def retranslateUi(self, MainWindow: QMainWindow):
+        MainWindow.setWindowTitle("AF Mailer")
+        self.lblEyebrow.setText("Bulk email operations")
+        self.lblHeroTitle.setText("Compose and launch personalized campaigns")
+        self.lblHeroSubtitle.setText(
+            "Ρύθμισε Excel δεδομένα, placeholders, προσωπικά PDFs και κάνε preview πριν στείλεις."
+        )
+        self.lblSummaryExcelLabel.setText("Data source")
+        self.lblSummaryExcelValue.setText("No Excel loaded")
+        self.lblSummaryRecipientsLabel.setText("Recipient column")
+        self.lblSummaryRecipientsValue.setText("Not selected")
+        self.lblSummaryAttachmentsLabel.setText("Attachments")
+        self.lblSummaryAttachmentsValue.setText("0 files")
+        self.lblSetupTitle.setText("Campaign setup")
+        self.lblDataTitle.setText("Recipients")
+        self.lblExcel.setText("Excel source")
+        self.txtExcel.setPlaceholderText("Select workbook")
+        self.btnBrowseExcel.setText("Browse")
+        self.lblEmailCol.setText("Email column")
+        self.grpPlaceholders.setTitle("Placeholders")
+        self.lblPhHint.setText("Double click για αντιγραφή placeholder στο clipboard.")
+        self.lblComposeTitle.setText("Composer")
+        self.lblComposeSubtitle.setText("Στήσε το subject και το HTML body όπως σε σύγχρονο email editor.")
+        self.radioDraft.setText("Save draft")
+        self.radioSend.setText("Send now")
+        self.txtSubject.setPlaceholderText("Email subject")
+        self.btnBold.setText("B")
+        self.btnItalic.setText("I")
+        self.btnUnderline.setText("U")
+        self.lblBody.setPlaceholderText("Write your message body here...")
+        self.btnValidate.setText("Validate")
+        self.btnPreview.setText("Preview")
+        self.btnCheck.setText("Dry run")
+        self.btnRun.setText("Start send")
+        self.grpPersonalPdf.setTitle("Personal PDFs")
+        self.lblPdfFolder.setText("PDF folder")
+        self.txtPdfFolderName.setPlaceholderText("No folder selected")
+        self.btnBrowsePdfFolder.setText("Browse")
+        self.lblPdfPatterns.setText("Filename patterns")
+        self.btnAddPdfPattern.setText("Add")
+        self.btnRemovePdfPattern.setText("Remove")
+        self.chkRequirePersonalPdf.setText("Require personal PDF for every recipient")
+        self.attachmentsCard.setTitle("Shared attachments")
+        self.lblAttachments.setText("Files sent to all recipients")
+        self.btnAddAttachments.setText("Add files")
+        self.btnClearAttachments.setText("Clear")
+        self.grpRun.setTitle("Activity")
+        self.txtLog.setPlaceholderText("Run logs appear here...")
