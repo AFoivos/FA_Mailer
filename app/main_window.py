@@ -17,7 +17,7 @@ from app.ui_main_window import Ui_MainWindow
 from app.services.mailer_worker import BulkMailerWorker
 from app.services.check_worker import EmailCheckWorker
 from app.ui_resources import APP_STYLE, resource_path
-from app.utils.template_utils import normalize_mapping, safe_format
+from app.utils.template_utils import is_valid_email, normalize_mapping, safe_format
 from PySide6.QtGui import QFont, QTextCharFormat, QTextCursor, QIcon
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -59,6 +59,7 @@ class MainWindow(QMainWindow):
         self.check_thread: QThread | None = None
         self.check_worker: EmailCheckWorker | None = None
         self._wire()
+        self._refresh_mail_provider_ui()
         self._refresh_summary()
 
         self._log("Ready.")
@@ -115,6 +116,8 @@ class MainWindow(QMainWindow):
     def _wire(self):
         self.ui.btnBrowseExcel.clicked.connect(self.pick_excel)
         self.ui.comboEmailCol.currentTextChanged.connect(self._refresh_summary)
+        if hasattr(self.ui, "comboMailProvider"):
+            self.ui.comboMailProvider.currentIndexChanged.connect(self._refresh_mail_provider_ui)
 
         self.ui.btnAddAttachments.clicked.connect(self.add_common_attachments)
         self.ui.btnClearAttachments.clicked.connect(self.clear_common_attachments)
@@ -258,6 +261,39 @@ class MainWindow(QMainWindow):
             return "draft"
         return "send"
 
+    def _get_mail_provider(self) -> str:
+        if hasattr(self.ui, "comboMailProvider"):
+            data = self.ui.comboMailProvider.currentData()
+            if data:
+                return str(data).strip().lower()
+            text = (self.ui.comboMailProvider.currentText() or "").strip().lower()
+            if "gmail" in text:
+                return "gmail"
+        return "outlook"
+
+    def _get_gmail_credentials(self) -> tuple[str, str]:
+        gmail_user = ""
+        gmail_app_password = ""
+        if hasattr(self.ui, "txtGmailUser"):
+            gmail_user = (self.ui.txtGmailUser.text() or "").strip()
+        if hasattr(self.ui, "txtGmailPassword"):
+            gmail_app_password = (self.ui.txtGmailPassword.text() or "").strip().replace(" ", "")
+        return gmail_user, gmail_app_password
+
+    def _refresh_mail_provider_ui(self):
+        provider = self._get_mail_provider()
+        is_gmail = provider == "gmail"
+
+        for name in ("lblGmailUser", "txtGmailUser", "lblGmailPassword", "txtGmailPassword", "lblGmailHint"):
+            if hasattr(self.ui, name):
+                getattr(self.ui, name).setVisible(is_gmail)
+
+        if hasattr(self.ui, "radioDraft"):
+            self.ui.radioDraft.setEnabled(not is_gmail)
+            if is_gmail and self.ui.radioDraft.isChecked() and hasattr(self.ui, "radioSend"):
+                self.ui.radioSend.setChecked(True)
+            self.ui.radioDraft.setToolTip("Gmail SMTP supports Send now only." if is_gmail else "")
+
     def add_common_attachments(self):
         paths, _ = QFileDialog.getOpenFileNames(
             self,
@@ -362,6 +398,18 @@ class MainWindow(QMainWindow):
         if hasattr(self.ui, "listPlaceholders"):
             if self.ui.listPlaceholders.count() == 0:
                 warnings.append("Η λίστα placeholders είναι άδεια. (Επίλεξε Excel για να φορτώσουν οι στήλες.)")
+
+        provider = self._get_mail_provider()
+        if provider == "gmail":
+            gmail_user, gmail_app_password = self._get_gmail_credentials()
+            if not gmail_user:
+                errors.append("Gmail address is required.")
+            elif not is_valid_email(gmail_user):
+                errors.append("Gmail address is not valid.")
+            if not gmail_app_password:
+                errors.append("Gmail app password is required.")
+            if self._get_mode() == "draft":
+                errors.append("Gmail SMTP supports Send now only. Select Send now or use Outlook for drafts.")
 
         patterns_count = 0
         if hasattr(self.ui, "listPdfPatterns"):
@@ -652,6 +700,23 @@ class MainWindow(QMainWindow):
         body_tpl = self._get_body_html()
 
         mode = self._get_mode()  
+        provider = self._get_mail_provider()
+        gmail_user = ""
+        gmail_app_password = ""
+        if provider == "gmail":
+            gmail_user, gmail_app_password = self._get_gmail_credentials()
+            if not gmail_user:
+                QMessageBox.critical(self, "Run error", "Gmail address is required.")
+                return
+            if not is_valid_email(gmail_user):
+                QMessageBox.critical(self, "Run error", "Gmail address is not valid.")
+                return
+            if not gmail_app_password:
+                QMessageBox.critical(self, "Run error", "Gmail app password is required.")
+                return
+            if mode == "draft":
+                QMessageBox.critical(self, "Run error", "Gmail SMTP supports Send now only. Select Send now or use Outlook for drafts.")
+                return
 
         require_personal = bool(self.ui.chkRequirePersonalPdf.isChecked()) if hasattr(self.ui, "chkRequirePersonalPdf") else False
         patterns = self._collect_pdf_patterns()
@@ -665,12 +730,13 @@ class MainWindow(QMainWindow):
 
         common_paths = list(getattr(self, "common_attachments_paths", []))
 
-        if QMessageBox.question(self, "Επιβεβαίωση", f"Mode: {mode}\nΣυνέχεια;") != QMessageBox.Yes:
+        provider_label = "Gmail" if provider == "gmail" else "Outlook"
+        if QMessageBox.question(self, "Επιβεβαίωση", f"Provider: {provider_label}\nMode: {mode}\nΣυνέχεια;") != QMessageBox.Yes:
             return
 
         self._set_action_buttons_enabled(False)
         self._progress_set(0)
-        self._log("[THREAD] Starting...")
+        self._log(f"[THREAD] Starting... provider={provider}")
 
         self.thread = QThread(self)
         self.worker = BulkMailerWorker(
@@ -683,6 +749,9 @@ class MainWindow(QMainWindow):
             personal_folder=self.personal_pdf_folder,
             patterns=patterns,
             require_personal=require_personal,
+            mail_provider=provider,
+            gmail_user=gmail_user,
+            gmail_app_password=gmail_app_password,
         )
         self.worker.moveToThread(self.thread)
 
@@ -706,6 +775,7 @@ class MainWindow(QMainWindow):
         skipped = results.get("skipped", 0)
         miss = results.get("missing_personal", 0)
         mode = results.get("mode", "draft")
+        provider = results.get("provider", "outlook")
         rows = results.get("rows", [])
         subject_for_report = results.get("subject_tpl", (self.ui.txtSubject.text() or "").strip())
         report_path = self._save_send_report(rows, subject_for_report)
@@ -714,7 +784,7 @@ class MainWindow(QMainWindow):
             self,
             "ΟΚ",
             (
-                f"Ολοκληρώθηκε.\nMode: {mode}\nok={ok}\nskipped={skipped}\n"
+                f"Ολοκληρώθηκε.\nProvider: {provider}\nMode: {mode}\nok={ok}\nskipped={skipped}\n"
                 f"missing_personal={miss}\n"
                 f"report={report_path or 'not saved'}"
             ),

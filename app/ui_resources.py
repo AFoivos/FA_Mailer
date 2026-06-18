@@ -135,7 +135,7 @@ QListWidget {
     color: #172033;
     border: 1px solid #d7deea;
     border-radius: 16px;
-    padding: 10px 12px;
+    padding: 8px 12px;
     selection-background-color: #c7ddff;
     selection-color: #152033;
 }
@@ -144,6 +144,12 @@ QTextEdit,
 QPlainTextEdit,
 QListWidget {
     padding: 12px;
+}
+
+QLineEdit,
+QComboBox,
+QPushButton {
+    min-height: 22px;
 }
 
 QLineEdit:focus,
@@ -156,7 +162,7 @@ QListWidget:focus {
 }
 
 QComboBox {
-    min-height: 22px;
+    padding-right: 32px;
 }
 
 QComboBox::drop-down {
@@ -169,7 +175,7 @@ QPushButton {
     color: #20304c;
     border: 1px solid rgba(129, 147, 176, 0.24);
     border-radius: 14px;
-    padding: 10px 16px;
+    padding: 8px 16px;
     font-weight: 700;
 }
 

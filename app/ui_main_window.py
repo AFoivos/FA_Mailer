@@ -142,6 +142,7 @@ class Ui_MainWindow(object):
     def _build_left_sidebar(self):
         self.leftSidebar = QFrame(self.centralwidget)
         self.leftSidebar.setObjectName("SidebarCard")
+        self.leftSidebar.setMinimumWidth(280)
         left_layout = QVBoxLayout(self.leftSidebar)
         left_layout.setContentsMargins(18, 18, 18, 18)
         left_layout.setSpacing(16)
@@ -183,6 +184,37 @@ class Ui_MainWindow(object):
         self.comboEmailCol = QComboBox(self.dataCard)
         self.comboEmailCol.setObjectName("comboEmailCol")
         data_layout.addWidget(self.comboEmailCol)
+
+        self.lblMailProvider = QLabel(self.dataCard)
+        self.lblMailProvider.setObjectName("FieldLabel")
+        data_layout.addWidget(self.lblMailProvider)
+
+        self.comboMailProvider = QComboBox(self.dataCard)
+        self.comboMailProvider.setObjectName("comboMailProvider")
+        data_layout.addWidget(self.comboMailProvider)
+
+        self.lblGmailUser = QLabel(self.dataCard)
+        self.lblGmailUser.setObjectName("FieldLabel")
+        data_layout.addWidget(self.lblGmailUser)
+
+        self.txtGmailUser = QLineEdit(self.dataCard)
+        self.txtGmailUser.setObjectName("txtGmailUser")
+        data_layout.addWidget(self.txtGmailUser)
+
+        self.lblGmailPassword = QLabel(self.dataCard)
+        self.lblGmailPassword.setObjectName("FieldLabel")
+        data_layout.addWidget(self.lblGmailPassword)
+
+        self.txtGmailPassword = QLineEdit(self.dataCard)
+        self.txtGmailPassword.setObjectName("txtGmailPassword")
+        self.txtGmailPassword.setEchoMode(QLineEdit.EchoMode.Password)
+        data_layout.addWidget(self.txtGmailPassword)
+
+        self.lblGmailHint = QLabel(self.dataCard)
+        self.lblGmailHint.setObjectName("HelperLabel")
+        self.lblGmailHint.setWordWrap(True)
+        data_layout.addWidget(self.lblGmailHint)
+
         left_layout.addWidget(self.dataCard)
 
         self.grpPlaceholders = QGroupBox(self.leftSidebar)
@@ -205,6 +237,7 @@ class Ui_MainWindow(object):
     def _build_compose_center(self):
         self.composePanel = QFrame(self.centralwidget)
         self.composePanel.setObjectName("ComposePanel")
+        self.composePanel.setMinimumWidth(560)
         compose_layout = QVBoxLayout(self.composePanel)
         compose_layout.setContentsMargins(0, 0, 0, 0)
         compose_layout.setSpacing(16)
@@ -313,6 +346,7 @@ class Ui_MainWindow(object):
     def _build_right_sidebar(self):
         self.rightSidebar = QFrame(self.centralwidget)
         self.rightSidebar.setObjectName("SidebarCard")
+        self.rightSidebar.setMinimumWidth(320)
         right_layout = QVBoxLayout(self.rightSidebar)
         right_layout.setContentsMargins(18, 18, 18, 18)
         right_layout.setSpacing(16)
@@ -346,6 +380,7 @@ class Ui_MainWindow(object):
 
         self.listPdfPatterns = QListWidget(self.grpPersonalPdf)
         self.listPdfPatterns.setObjectName("listPdfPatterns")
+        self.listPdfPatterns.setMinimumHeight(72)
         pdf_layout.addWidget(self.listPdfPatterns, 1)
 
         pdf_buttons = QHBoxLayout()
@@ -363,7 +398,8 @@ class Ui_MainWindow(object):
         self.chkRequirePersonalPdf = QCheckBox(self.grpPersonalPdf)
         self.chkRequirePersonalPdf.setObjectName("chkRequirePersonalPdf")
         pdf_layout.addWidget(self.chkRequirePersonalPdf)
-        right_layout.addWidget(self.grpPersonalPdf, 1)
+        self.grpPersonalPdf.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        right_layout.addWidget(self.grpPersonalPdf)
 
         self.attachmentsCard = QGroupBox(self.rightSidebar)
         self.attachmentsCard.setObjectName("attachmentsCard")
@@ -390,8 +426,10 @@ class Ui_MainWindow(object):
         self.listAttachments = QListWidget(self.attachmentsCard)
         self.listAttachments.setObjectName("listAttachments")
         self.listAttachments.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.listAttachments.setMinimumHeight(84)
         attachments_layout.addWidget(self.listAttachments, 1)
-        right_layout.addWidget(self.attachmentsCard, 1)
+        self.attachmentsCard.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        right_layout.addWidget(self.attachmentsCard)
 
         self.grpRun = QGroupBox(self.rightSidebar)
         self.grpRun.setObjectName("grpRun")
@@ -409,6 +447,7 @@ class Ui_MainWindow(object):
         self.progressBar.setObjectName("progressBar")
         self.progressBar.setValue(0)
         run_layout.addWidget(self.progressBar)
+        self.grpRun.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         right_layout.addWidget(self.grpRun, 1)
 
     def retranslateUi(self, MainWindow: QMainWindow):
@@ -430,6 +469,15 @@ class Ui_MainWindow(object):
         self.txtExcel.setPlaceholderText("Select workbook")
         self.btnBrowseExcel.setText("Browse")
         self.lblEmailCol.setText("Email column")
+        self.lblMailProvider.setText("Mail account")
+        self.comboMailProvider.clear()
+        self.comboMailProvider.addItem("Outlook", "outlook")
+        self.comboMailProvider.addItem("Gmail", "gmail")
+        self.lblGmailUser.setText("Gmail address")
+        self.txtGmailUser.setPlaceholderText("name@gmail.com")
+        self.lblGmailPassword.setText("Gmail app password")
+        self.txtGmailPassword.setPlaceholderText("16-character app password")
+        self.lblGmailHint.setText("Use a Google app password, not your regular Gmail password.")
         self.grpPlaceholders.setTitle("Placeholders")
         self.lblPhHint.setText("Double click για αντιγραφή placeholder στο clipboard.")
         self.lblComposeTitle.setText("Composer")
