@@ -10,15 +10,17 @@ Unauthorized copying, modification or distribution is prohibited.
 
 import os
 import re
+import tempfile
 from datetime import datetime
 from pathlib import Path
-from PySide6.QtCore import QThread
+from PySide6.QtCore import QThread, QUrl
 from app.ui_main_window import Ui_MainWindow
 from app.services.mailer_worker import BulkMailerWorker
 from app.services.check_worker import EmailCheckWorker
 from app.ui_resources import APP_STYLE, resource_path
 from app.utils.template_utils import is_valid_email, normalize_mapping, safe_format
-from PySide6.QtGui import QFont, QTextCharFormat, QTextCursor, QIcon
+from app.utils.html_email import prepare_html_email
+from PySide6.QtGui import QFont, QTextCharFormat, QTextCursor, QIcon, QDesktopServices
 from PySide6.QtWidgets import (
     QMainWindow,
     QFileDialog,
@@ -46,6 +48,7 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(1280, 820)
 
         self.setStyleSheet(APP_STYLE)
+        self._imported_html: str | None = None
         self._configure_window()
         self._setup_footer_copyright()
         log_font = QFont("SF Mono", 10)
@@ -72,6 +75,92 @@ class MainWindow(QMainWindow):
         self.ui.txtSubject.setTextMargins(10, 0, 10, 0)
         self.ui.lblBody.setViewportMargins(8, 8, 8, 8)
         self.ui.workspaceSplitter.setHandleWidth(14)
+
+        html_toolbar = QHBoxLayout()
+        import_button = QPushButton("Εισαγωγή HTML", self.ui.editorCard)
+        import_button.clicked.connect(self.import_html)
+        html_toolbar.addWidget(import_button)
+        self._html_preview_button = QPushButton("Προβολή αρχικού HTML", self.ui.editorCard)
+        self._html_preview_button.clicked.connect(self.open_original_html)
+        self._html_preview_button.hide()
+        html_toolbar.addWidget(self._html_preview_button)
+        self._text_editor_button = QPushButton("Επεξεργασία κειμένου", self.ui.editorCard)
+        self._text_editor_button.clicked.connect(self.use_text_editor)
+        self._text_editor_button.hide()
+        html_toolbar.addWidget(self._text_editor_button)
+        html_toolbar.addStretch()
+        self.ui.editorCard.layout().insertLayout(0, html_toolbar)
+        self._html_status = QLabel(self.ui.editorCard)
+        self._html_status.setWordWrap(True)
+        self._html_status.hide()
+        self.ui.editorCard.layout().insertWidget(1, self._html_status)
+
+    def import_html(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Εισαγωγή email από HTML", "", "HTML (*.html *.htm)"
+        )
+        if not path:
+            return
+        try:
+            html = Path(path).read_text(encoding="utf-8-sig")
+            if not html.strip():
+                raise ValueError("Το αρχείο HTML είναι κενό.")
+            prepare_html_email(html)
+        except Exception as exc:
+            QMessageBox.critical(self, "Εισαγωγή HTML", str(exc))
+            return
+        if self._get_body_text() or self._imported_html is not None:
+            answer = QMessageBox.question(
+                self, "Εισαγωγή HTML", "Να αντικατασταθεί το τρέχον σώμα email;",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No,
+            )
+            if answer != QMessageBox.Yes:
+                return
+        self._imported_html = html
+        self.ui.lblBody.setHtml(html)
+        self.ui.lblBody.setReadOnly(True)
+        for name in ("btnBold", "btnItalic", "btnUnderline"):
+            getattr(self.ui, name).setEnabled(False)
+        self._html_preview_button.show()
+        self._text_editor_button.show()
+        self._html_status.setText(
+            f"HTML: {Path(path).name} — Αποστολή με την αρχική μορφοποίηση. "
+            "Η παρακάτω προεπισκόπηση είναι ενδεικτική. "
+            "Για την πλήρη εμφάνιση πάτησε «Προβολή αρχικού HTML»."
+        )
+        self._html_status.show()
+        self._log(f"HTML imported: {Path(path).name}")
+
+    def open_original_html(self):
+        if self._imported_html is None:
+            return
+        try:
+            with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as preview:
+                preview.write(self._imported_html.encode("utf-8"))
+                preview_path = preview.name
+            if not QDesktopServices.openUrl(QUrl.fromLocalFile(preview_path)):
+                raise RuntimeError("Δεν ήταν δυνατό να ανοίξει η προεπισκόπηση HTML.")
+        except Exception as exc:
+            QMessageBox.critical(self, "Προβολή HTML", str(exc))
+
+    def use_text_editor(self):
+        if self._imported_html is None:
+            return
+        answer = QMessageBox.question(
+            self, "Επεξεργασία κειμένου",
+            "Η επεξεργασία κειμένου μετατρέπει το αρχικό HTML και μπορεί να αλλάξει "
+            "τα χρώματα ή τη διάταξη. Να συνεχίσω;",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No,
+        )
+        if answer != QMessageBox.Yes:
+            return
+        self._imported_html = None
+        self.ui.lblBody.setReadOnly(False)
+        for name in ("btnBold", "btnItalic", "btnUnderline"):
+            getattr(self.ui, name).setEnabled(True)
+        self._html_preview_button.hide()
+        self._text_editor_button.hide()
+        self._html_status.hide()
 
     def _setup_footer_copyright(self):
         if not hasattr(self.ui, "statusbar"):
@@ -467,6 +556,8 @@ class MainWindow(QMainWindow):
         return ""
     
     def _get_body_html(self) -> str:
+        if self._imported_html is not None:
+            return self._imported_html
         w = self.ui.lblBody
         if hasattr(w, "toHtml"):
             return (w.toHtml() or "").strip()

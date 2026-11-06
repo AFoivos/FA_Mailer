@@ -4,12 +4,14 @@ import os
 import mimetypes
 import smtplib
 import ssl
+import tempfile
 from email.message import EmailMessage
 from pathlib import Path
 
 from PySide6.QtCore import QObject, Signal
 
 from app.utils.template_utils import is_valid_email, normalize_mapping, safe_format
+from app.utils.html_email import prepare_html_email
 
 """
 AF Mailer
@@ -80,7 +82,14 @@ class BulkMailerWorker(QObject):
         msg["To"] = recipient
         msg["Subject"] = subject
         msg.set_content("This email contains HTML content. Please view it in an HTML-capable client.")
-        msg.add_alternative(body_html or "", subtype="html")
+        body_html, images = prepare_html_email(body_html or "")
+        msg.add_alternative(body_html, subtype="html")
+        html_part = msg.get_payload()[-1]
+        for image in images:
+            html_part.add_related(
+                image.data, maintype="image", subtype=image.subtype,
+                cid=f"<{image.cid}>", filename=image.filename, disposition="inline",
+            )
 
         for path in attachment_paths:
             ctype, encoding = mimetypes.guess_type(path)
@@ -96,6 +105,28 @@ class BulkMailerWorker(QObject):
                 )
 
         return msg
+
+    @staticmethod
+    def _set_outlook_html(mail, body_html: str):
+        body_html, images = prepare_html_email(body_html)
+        mail.HTMLBody = body_html
+        for image in images:
+            with tempfile.NamedTemporaryFile(suffix=f".{image.subtype}", delete=False) as tmp:
+                tmp.write(image.data)
+                image_path = tmp.name
+            try:
+                attachment = mail.Attachments.Add(Source=image_path)
+                attachment.PropertyAccessor.SetProperty(
+                    "http://schemas.microsoft.com/mapi/proptag/0x3712001F", image.cid
+                )
+                attachment.PropertyAccessor.SetProperty(
+                    "http://schemas.microsoft.com/mapi/proptag/0x370E001F", f"image/{image.subtype}"
+                )
+                attachment.PropertyAccessor.SetProperty(
+                    "http://schemas.microsoft.com/mapi/proptag/0x7FFE000B", True
+                )
+            finally:
+                Path(image_path).unlink(missing_ok=True)
 
     def run(self):
         smtp: smtplib.SMTP | None = None
@@ -222,7 +253,7 @@ class BulkMailerWorker(QObject):
                         mail = outlook.CreateItem(0)
                         mail.To = email
                         mail.Subject = subject
-                        mail.HTMLBody = body_html
+                        self._set_outlook_html(mail, body_html)
                         for p in attachments_to_send:
                             mail.Attachments.Add(Source=p)
 
